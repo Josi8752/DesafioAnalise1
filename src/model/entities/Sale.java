@@ -69,8 +69,16 @@ public class Sale {
 
 	@Override
 	public String toString() {
-		System.out.println("Cinco primeiras vendas de 2016 de maior preço médio ");
-		return   month + ", " + year + ", " + seller + ", " + items + ", "+ total+", pm = "
+		
+		return   month + ", " 
+		         + year 
+		        + ", " 
+				+ seller 
+				+ ", " 
+				+ items 
+				+ ", "
+				+ total
+				+", pm = "
 				+String.format("%.2f",averagePrice());
 	}
 
