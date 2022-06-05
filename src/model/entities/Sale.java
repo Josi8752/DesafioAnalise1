@@ -1,8 +1,8 @@
 package model.entities;
 
+import java.util.Objects;
 
-
-public class Sale {
+public class Sale  {
 
 	private Integer month;
 	private Integer year;
@@ -83,5 +83,6 @@ public class Sale {
 	}
 
 	
+
 	
 }

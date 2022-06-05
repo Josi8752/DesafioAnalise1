@@ -3,17 +3,12 @@ package application;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.DirectoryStream.Filter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import model.entities.Sale;
 
@@ -23,41 +18,69 @@ public class Program {
 		Locale.setDefault(Locale.US);
 		Scanner sc = new Scanner(System.in);
 
-		System.out.print("Entre o caminho do arquivo: ");
+		System.out.print("Enter with the file path: ");
 		String path = sc.next();
+		System.out.println();
+
 		List<Sale> sales = new ArrayList<>();
 
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
-			String salers = br.readLine();
-			while (salers != null) {
-				String[] fields = salers.split(",");
-				sales.add(new Sale(Integer.parseInt(fields[0]), Integer.parseInt(fields[1]), (fields[2]),
-						Integer.parseInt(fields[3]), Double.parseDouble(fields[4])));
-				salers = br.readLine();
+			String line = br.readLine();
+			while (line != null) {
 
+				String[] fields = line.split(",");
+
+				int month = Integer.parseInt(fields[0]);
+				int year = Integer.parseInt(fields[1]);
+				String name = fields[2];
+				int items = Integer.parseInt(fields[3]);
+				double vendas = Double.parseDouble(fields[4]);
+
+				sales.add(new Sale(month, year, name, items, vendas));
+
+				line = br.readLine();
 			}
-			System.out.println("Cinco primeiras vendas de 2016 de maior preço médio ");
+			System.out.println("Frist five sales of 2016 of highest avarege mid price");
+            System.out.println( );
 		
-			Comparator<Integer> comp = (s1, s2) -> s1.compareTo(s2);
+          Comparator<Sale> comp =(s1, s2) -> s1.averagePrice().compareTo(s2.averagePrice());
+            
+			List<Sale> sale = sales.stream()
 
-			List<Integer> list = (List<Integer>) sales.stream()
-					.map(x -> x.getYear())
-					.filter(x -> x == 2016)
-					.limit(5)
+					.filter(x -> x.getYear().equals(2016))
 					.sorted(comp.reversed())
+					.limit(5)
 					.collect(Collectors.toList());
-		list.forEach(System.out::println);
+
+			sale.forEach(System.out::println);
+            
+			System.out.println();
+            System.out.println();
+		    
+            System.out.println("Valor total vendido pelo vendedor Logan nos meses 1 e 7 = ");
+		
+           
+
+			Double s = sales.stream()
+					.filter(x -> x.getMonth().equals(1))
+					.filter(x -> x.getMonth().equals(7))
+					.filter(x -> x.getSeller().equals("logan"))
+					
+					.mapToDouble(x -> x.getTotal())
+					.sum();
+					
+			System.out.println(s);
+            
 		}
 
-		
 		catch (
 
 		IOException e) {
-			System.out.println("Erro: " + e.getMessage());
+			System.out.println("Error: " + e.getMessage());
 
 		}
-		System.out.println("terminou");
+		
 		sc.close();
 	}
 }
