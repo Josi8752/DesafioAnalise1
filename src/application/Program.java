@@ -22,7 +22,7 @@ public class Program {
 		String path = sc.next();
 		System.out.println();
 
-		List<Sale> sales = new ArrayList<>();
+		List<Sale> salles = new ArrayList<>();
 
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
@@ -37,41 +37,42 @@ public class Program {
 				int items = Integer.parseInt(fields[3]);
 				double vendas = Double.parseDouble(fields[4]);
 
-				sales.add(new Sale(month, year, name, items, vendas));
+				salles.add(new Sale(month, year, name, items, vendas));
 
 				line = br.readLine();
 			}
 			System.out.println("Frist five sales of 2016 of highest avarege mid price");
-            System.out.println( );
-		
-          Comparator<Sale> comp =(s1, s2) -> s1.averagePrice().compareTo(s2.averagePrice());
-            
-			List<Sale> sale = sales.stream()
+			System.out.println();
+
+			List<Sale> sale = salles.stream()
 
 					.filter(x -> x.getYear().equals(2016))
-					.sorted(comp.reversed())
+					.sorted(Comparator.comparing(Sale::averagePrice).reversed())
 					.limit(5)
 					.collect(Collectors.toList());
 
 			sale.forEach(System.out::println);
-            
-			System.out.println();
-            System.out.println();
-		    
-            System.out.println("Valor total vendido pelo vendedor Logan nos meses 1 e 7 = ");
-		
-           
 
-			Double s = sales.stream()
-					.filter(x -> x.getMonth().equals(1))
-					.filter(x -> x.getMonth().equals(7))
-					.filter(x -> x.getSeller().equals("logan"))
+			System.out.println();
+			System.out.println();
+
+			System.out.print("Valor total vendido pelo vendedor Logan nos meses 1 e 7 = ");
+
+			Double salle = salles.stream().filter(l -> l.getMonth().equals(1))
 					
-					.mapToDouble(x -> x.getTotal())
+					.filter(l -> l.getSeller().equals("Logan"))
+					.mapToDouble(l -> l.getTotal())
 					.sum();
+
+			Double s = salles.stream()
 					
-			System.out.println(s);
-            
+					.filter(l -> l.getMonth().equals(7))
+					.filter(l -> l.getSeller().equals("Logan"))
+					.mapToDouble(l -> l.getTotal()).sum();
+
+			Double vendasDoLogan = salle + s;
+
+			System.out.print(vendasDoLogan);
 		}
 
 		catch (
@@ -80,7 +81,7 @@ public class Program {
 			System.out.println("Error: " + e.getMessage());
 
 		}
-		
+
 		sc.close();
 	}
 }
